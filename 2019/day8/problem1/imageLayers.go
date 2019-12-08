@@ -18,28 +18,18 @@ func main() {
 		panic(err)
 	}
 
-	minZeros := math.MaxInt64
-	numOnes := 0
-	numTwos := 0
+	counts := make([]int, 3)
+	counts[0] = math.MaxInt64
 	for i := 0; i < len(image); i += width * height {
-		layerZeros := 0
-		layerOnes := 0
-		layerTwos := 0
+		layerCounts := make([]int, 3)
 		for j := i; j < i+width*height; j++ {
-			if image[j] == 0 {
-				layerZeros++
-			} else if image[j] == 1 {
-				layerOnes++
-			} else if image[j] == 2 {
-				layerTwos++
-			}
+			layerCounts[image[j]] += 1
 		}
-		if layerZeros < minZeros {
-			minZeros = layerZeros
-			numOnes = layerOnes
-			numTwos = layerTwos
+
+		if layerCounts[0] < counts[0] {
+			counts = layerCounts
 		}
 	}
 
-	fmt.Println("Checksum:", numOnes*numTwos)
+	fmt.Println("Checksum:", counts[1]*counts[2])
 }
