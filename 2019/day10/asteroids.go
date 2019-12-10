@@ -49,7 +49,7 @@ func Asteroids2(x, y int) (map[point.Point]struct{}, error) {
 	for i, line := range lines {
 		for j, object := range line {
 			if string(object) == "#" {
-				asteroids[point.New(j - x, y - i)] = struct{}{}
+				asteroids[point.New(j-x, y-i)] = struct{}{}
 			}
 		}
 	}

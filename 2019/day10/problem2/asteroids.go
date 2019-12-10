@@ -12,8 +12,8 @@ import (
 
 const (
 	expectedVaporized = 200
-	stationX = 17
-	stationY = 23
+	stationX          = 17
+	stationY          = 23
 )
 
 type bucket struct {
@@ -38,17 +38,17 @@ func main() {
 			continue
 		}
 
-		regionNum := determineRegion(station, otherAsteroid)
+		regionNum, degree := getRegionAndDegree(station, otherAsteroid)
 		region, ok := regions[regionNum]
 		if !ok {
 			region = make(map[string]bucket)
 		}
 
-		bucket := region[rationalString(regionNum, otherAsteroid, station)]
+		bucket := region[rationalString(station, otherAsteroid)]
 		bucket.points = append(bucket.points, otherAsteroid)
-		bucket.degree = determineDegree(regionNum, station, otherAsteroid)
+		bucket.degree = degree
 
-		region[rationalString(regionNum, otherAsteroid, station)] = bucket
+		region[rationalString(station, otherAsteroid)] = bucket
 		regions[regionNum] = region
 	}
 
@@ -79,7 +79,7 @@ func main() {
 			vaporPoint := bucket.points[0]
 			vaporizedCounter++
 			if vaporizedCounter == expectedVaporized {
-				fmt.Println("Vapor point:", stationX + vaporPoint.X, stationY - vaporPoint.Y)
+				fmt.Println("Vapor point:", stationX+vaporPoint.X, stationY-vaporPoint.Y)
 				return
 			}
 
@@ -89,57 +89,33 @@ func main() {
 	}
 }
 
-func determineRegion(ref point.Point, other point.Point) int {
+func getRegionAndDegree(ref, other point.Point) (int, float64) {
 	dx := other.X - ref.X
 	dy := other.Y - ref.Y
 
 	if dx == 0 && dy > 0 {
-		return 0
+		return 0, 0
 	} else if dx > 0 && dy > 0 {
-		return 1
+		return 1, float64(other.X-ref.X) / float64(other.Y-ref.Y)
 	} else if dx > 0 && dy == 0 {
-		return 2
+		return 2, 0
 	} else if dx > 0 && dy < 0 {
-		return 3
+		return 3, -float64(other.Y-ref.Y) / float64(other.X-ref.X)
 	} else if dx == 0 && dy < 0 {
-		return 4
+		return 4, 0
 	} else if dx < 0 && dy < 0 {
-		return 5
+		return 5, float64(other.X-ref.X) / float64(other.Y-ref.Y)
 	} else if dx < 0 && dy == 0 {
-		return 6
+		return 6, 0
 	} else if dx < 0 && dy > 0 {
-		return 7
+		return 7, -float64(other.Y-ref.Y) / float64(other.X-ref.X)
 	}
 	panic("unknown region")
 }
 
-func determineDegree(region int, ref, other point.Point) float64 {
-	switch region {
-	case 0:
-		return 0
-	case 1:
-		return float64(other.X-ref.X) / float64(other.Y-ref.Y)
-	case 2:
-		return 0
-	case 3:
-		return -float64(other.Y-ref.Y) / float64(other.X-ref.X)
-	case 4:
-		return 0
-	case 5:
-		return float64(other.X-ref.X) / float64(other.Y-ref.Y)
-	case 6:
-		return 0
-	case 7:
-		return -float64(other.Y-ref.Y) / float64(other.X-ref.X)
-	}
-	panic("unknown region")
-}
-
-func rationalString(region int, other, aster point.Point) string {
-	switch region {
-	case 0, 4:
+func rationalString(ref, other point.Point) string {
+	if other.X == ref.X {
 		return "dx_zero"
-	default:
-		return big.NewRat(int64(other.Y-aster.Y), int64(other.X-aster.X)).String()
 	}
+	return big.NewRat(int64(other.Y-ref.Y), int64(other.X-ref.X)).String()
 }
