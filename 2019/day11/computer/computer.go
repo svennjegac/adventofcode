@@ -52,7 +52,7 @@ func (e *IntcodeComputer) next() bool {
 		e.pc.Add(e.pc, big.NewInt(2))
 		return false
 	case out:
-		e.out <- e.val(1, modes[0])
+		e.out <- copyBigInt(e.val(1, modes[0]))
 		e.pc.Add(e.pc, big.NewInt(2))
 		return false
 	case jmpIfTrue:
