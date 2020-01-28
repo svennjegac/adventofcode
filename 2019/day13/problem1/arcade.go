@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/svennjegac/adventofcode/2019/day11"
-	"github.com/svennjegac/adventofcode/2019/day11/computer"
+	"github.com/svennjegac/adventofcode/2019/day13"
+	"github.com/svennjegac/adventofcode/2019/day13/computer"
 )
 
 func main() {
-	memory, err := day11.Intcode("2019/day13/intcode.txt")
+	memory, err := day13.Intcode("2019/day13/intcode.txt")
 	if err != nil {
 		panic(err)
 	}
@@ -25,7 +25,7 @@ func main() {
 	}()
 
 	computerOutput := make([]int64, 0)
-	loop:
+loop:
 	for {
 		select {
 		case <-done:
