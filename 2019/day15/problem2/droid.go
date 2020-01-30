@@ -17,7 +17,7 @@ const (
 	wall   = 0
 	moved  = 1
 	finish = 2
-	ox = 3
+	ox     = 3
 )
 
 var oppositeDirection = map[int]int{
@@ -53,7 +53,7 @@ func main() {
 
 	len, fin := bfs(point.Point{}, area)
 	fmt.Println("Bfs:", len, "->", fin)
-	fmt.Println("Oxygen:", oxygen(point.Point{X:16, Y:-18}, area))
+	fmt.Println("Oxygen:", oxygen(point.Point{X: 16, Y: -18}, area))
 }
 
 func dfs(d *droid, area map[point.Point]int, in, out chan *big.Int) {
