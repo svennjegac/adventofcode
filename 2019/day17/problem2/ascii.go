@@ -5,7 +5,6 @@ import (
 	"github.com/svennjegac/adventofcode/2019/day17"
 	"github.com/svennjegac/adventofcode/2019/day17/computer"
 	"math/big"
-	"time"
 )
 
 func main() {
@@ -24,6 +23,8 @@ func main() {
 		close(done)
 	}()
 
+	go loadRules(in)
+
 	finalOut := 0
 loop:
 	for {
@@ -32,8 +33,6 @@ loop:
 			break loop
 		case co := <-out:
 			finalOut = int(co.Int64())
-		case <-time.After(time.Second):
-			go loadRules(in)
 		}
 	}
 
@@ -41,26 +40,21 @@ loop:
 }
 
 func loadRules(in chan *big.Int) {
-	// main: A,B,A,C,B,A,C,B,A,C10
-	mainRoutine := []int{65,44,66,44,65,44,67,44,66,44,65,44,67,44,66,44,65,44,67,10}
-	// a: L,12,L,12,L,6,L,610
-	a := []int{76,44,49,50,44,76,44,49,50,44,76,44,54,44,76,44,54,10}
-	// b: R,8,R,4,L,12,10
-	b := []int{82,44,56,44,82,44,52,44,76,44,49,50,10}
-	// c: L,12,L,6,R,12,R,8
-	c := []int{76,44,49,50,44,76,44,54,44,82,44,49,50,44,82,44,56,10}
-	// video
-	video := []int{110,10}
+	mainRoutine := "A,B,A,C,B,A,C,B,A,C\n"
+	a := "L,12,L,12,L,6,L,6\n"
+	b := "R,8,R,4,L,12\n"
+	c := "L,12,L,6,R,12,R,8\n"
+	video := "n\n"
 
-	load := func(args []int) {
-		for _, a := range args {
-			in <- new(big.Int).SetInt64(int64(a))
+	ls := func(s string) {
+		for _, r := range s {
+			in <- new(big.Int).SetInt64(int64(r))
 		}
 	}
 
-	load(mainRoutine)
-	load(a)
-	load(b)
-	load(c)
-	load(video)
+	ls(mainRoutine)
+	ls(a)
+	ls(b)
+	ls(c)
+	ls(video)
 }
