@@ -46,15 +46,15 @@ func loadRules(in chan *big.Int) {
 	c := "L,12,L,6,R,12,R,8\n"
 	video := "n\n"
 
-	ls := func(s string) {
+	loadStringRule := func(s string) {
 		for _, r := range s {
 			in <- new(big.Int).SetInt64(int64(r))
 		}
 	}
 
-	ls(mainRoutine)
-	ls(a)
-	ls(b)
-	ls(c)
-	ls(video)
+	loadStringRule(mainRoutine)
+	loadStringRule(a)
+	loadStringRule(b)
+	loadStringRule(c)
+	loadStringRule(video)
 }
